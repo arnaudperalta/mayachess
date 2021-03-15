@@ -20,11 +20,10 @@ def command(msg: str, board: chess.Board):
         print("id author Arnaud Peralta")
         print("uciok")
 
-    if msg == "isreadyok":
+    if msg == "isready":
         print("readyok")
 
     if msg == "ucinewgame":
-        board.reset()
         return
 
     if "position startpos moves" in msg:
@@ -38,12 +37,10 @@ def command(msg: str, board: chess.Board):
     if "position fen" in msg:
         fen = " ".join(msg.split(" ")[2:])
         board.set_fen(fen)
-        print(board)
         return
 
     if msg[0:2] == "go":
         move = find_best_move(board)
         board.push(move)
-        print(board)
         print(f'bestmove {move}')
         return
