@@ -26,7 +26,7 @@ def material_sum(board: chess.Board) -> float:
         if not piece:
             continue
         # Here, the move is already played
-        if piece.color == chess.BLACK:
+        if piece.color == chess.WHITE:
             position += get_piece_value(piece.piece_type)
         else:
             position -= get_piece_value(piece.piece_type)
@@ -64,7 +64,7 @@ def material_position_bonus(board: chess.Board) -> float:
             table = get_piece_table(chess.QUEEN)
             position += table[square]
         elif piece.piece_type == chess.KING:
-            table = get_piece_table(chess.KING)
+            table = get_piece_table(chess.KING, check_end_game(board))
             position += table[square]
     if board.turn == chess.WHITE:
         position *= -1
@@ -88,3 +88,21 @@ def find_best_move(board: chess.Board) -> chess.Move:
             bestValue = positionValue
             bestMove = move
     return bestMove
+
+
+def check_end_game(board: chess.Board):
+    queens = 0
+    minors_pieces = 0
+
+    for square in chess.SQUARES:
+        piece = board.piece_at(square)
+        if piece and piece.piece_type == chess.QUEEN:
+            queens += 1
+        if piece and (piece.piece_type == chess.BISHOP
+                      or piece.piece_type == chess.KNIGHT):
+            minors_pieces += 1
+
+    if queens == 0 or (queens == 2 and minors_pieces <= 1):
+        return True
+
+    return False
