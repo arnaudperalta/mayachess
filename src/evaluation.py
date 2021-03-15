@@ -1,5 +1,5 @@
 import chess
-from . import pieces_data as pdata
+from pieces_data import get_piece_table, get_piece_value
 
 
 def evaluate_position(board: chess.Board) -> float:
@@ -27,9 +27,9 @@ def material_sum(board: chess.Board) -> float:
             continue
         # Here, the move is already played
         if piece.color == chess.BLACK:
-            position += pdata.piece_values[piece.piece_type]
+            position += get_piece_value(piece.piece_type)
         else:
-            position -= pdata.piece_values[piece.piece_type]
+            position -= get_piece_value(piece.piece_type)
     return position
 
 
@@ -49,18 +49,23 @@ def material_position_bonus(board: chess.Board) -> float:
         if board.turn == chess.WHITE:
             square = 63 - square
         if piece.piece_type == chess.PAWN:
-            position += pdata.pawn_table[square]
+            table = get_piece_table(chess.PAWN)
+            position += table[square]
         elif piece.piece_type == chess.KNIGHT:
-            position += pdata.knight_table[square]
+            table = get_piece_table(chess.KNIGHT)
+            position += table[square]
         elif piece.piece_type == chess.BISHOP:
-            position += pdata.bishop_table[square]
+            table = get_piece_table(chess.BISHOP)
+            position += table[square]
         elif piece.piece_type == chess.ROOK:
-            position += pdata.rook_table[square]
+            table = get_piece_table(chess.ROOK)
+            position += table[square]
         elif piece.piece_type == chess.QUEEN:
-            position += pdata.queen_table[square]
+            table = get_piece_table(chess.QUEEN)
+            position += table[square]
         elif piece.piece_type == chess.KING:
-            position += pdata.king_middle_game_table[square]
-        # TODO : add king late game table
+            table = get_piece_table(chess.KING)
+            position += table[square]
     if board.turn == chess.WHITE:
         position *= -1
     return position
