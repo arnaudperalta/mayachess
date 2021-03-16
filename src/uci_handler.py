@@ -40,7 +40,7 @@ def command(msg: str, board: chess.Board):
         return
 
     if msg[0:2] == "go":
-        move = find_best_move(board)
+        move = find_best_move(board, 2)
         board.push(move)
         print(f'bestmove {move}')
         return
