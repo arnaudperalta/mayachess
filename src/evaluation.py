@@ -57,12 +57,19 @@ def find_best_move(board: chess.Board, depth: int) -> chess.Move:
     # Browsing all legal moves
     bestValue = None
     bestMove = None
+    bestDepth = None
     for move in board.legal_moves:
         board.push(move)
         # Evaluating the position for each moves
-        positionValue = minimax_ab_prenum(board, depth, -float("inf"),
-                                          float("inf"), board.turn)
+        (positionValue, d) = minimax(board, depth, depth, -float("inf"),
+                                     float("inf"), board.turn)
         board.pop()
+        if positionValue == -float("inf") or positionValue == float("inf"):
+            if bestDepth is None or d < bestDepth:
+                print(d)
+                bestDepth = d
+                bestValue = positionValue
+                bestMove = move
         if bestValue is None:
             bestValue = positionValue
             bestMove = move
@@ -93,32 +100,51 @@ def check_end_game(board: chess.Board):
     return False
 
 
-def minimax_ab_prenum(board: chess.Board, depth: int, alpha: float,
-                      beta: float, maximizingPlayer: bool):
-    if depth == 0 or board.is_game_over():
-        return evaluate_position(board)
+def minimax(board: chess.Board, originalDepth: int, depth, alpha,
+            beta: float, maximizingPlayer: bool):
+    """
+        Minimax algorithm returning a tuple in case of checkmate
+        We want to checkmate the fastest way, so we just need to compare
+        the depth where the algorithm returned the tuple.
+
+        originalDepth permits to calculate the difference between the actuel
+        depth and the orignal depth of the tree. We can calulcate the shortest
+        checkmate for example
+    """
+    # Returning -inf for white because this turn
+    # has not been played
+    if board.is_checkmate():
+        if maximizingPlayer == chess.WHITE:
+            return (-float('inf'), originalDepth - depth)
+        else:
+            return (float('inf'), originalDepth - depth)
+    elif board.is_game_over():
+        return (0, originalDepth - depth)
+
+    if depth == 0:
+        return (evaluate_position(board), originalDepth - depth)
 
     if maximizingPlayer == chess.WHITE:
         maxEval = -float('inf')
         for move in board.legal_moves:
             board.push(move)
-            value = minimax_ab_prenum(board, depth - 1, alpha,
-                                      beta, chess.BLACK)
+            (value, _) = minimax(board, originalDepth, depth - 1,
+                                 alpha, beta, chess.BLACK)
             board.pop()
             maxEval = max(maxEval, value)
             alpha = max(alpha, value)
             if beta <= alpha:
                 break
-        return maxEval
+        return (maxEval, depth)
     else:
         minEval = float('inf')
         for move in board.legal_moves:
             board.push(move)
-            value = minimax_ab_prenum(board, depth - 1, alpha,
-                                      beta, chess.WHITE)
+            (value, _) = minimax(board, originalDepth, depth - 1,
+                                 alpha, beta, chess.WHITE)
             board.pop()
             minEval = min(minEval, value)
             beta = min(beta, value)
             if beta <= alpha:
                 break
-        return minEval
+        return (minEval, depth)
