@@ -1,7 +1,2 @@
 .vscode/
-*.pyc
-.ipynb_checkpoints/
-__pycache__/
-dist/
-build/
-*.spec
+mayachess
