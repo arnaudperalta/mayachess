@@ -13,6 +13,7 @@ Chess engine developped under the traditionnal minimax alpha-beta pruning algori
 ### Dependency tracking
 ```
 $ go mod init github.com/arnaudperalta/mayachess
+$ go mod download
 ```
 
 ### Build :
