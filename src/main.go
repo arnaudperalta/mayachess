@@ -32,6 +32,10 @@ func uci_command(game **chess.Game, cmd string) {
 		fmt.Println("uciok")
 	}
 
+	if strings.Contains(cmd, "isready") {
+		fmt.Println("readyok")
+	}
+
 	if strings.Contains(cmd, "position startpos moves") {
 		var moves = strings.Split(cmd, " ")[3:]
 		*game = chess.NewGame()
