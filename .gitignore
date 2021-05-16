@@ -1,2 +1,4 @@
 .vscode/
 mayachess
+*.mod
+*.sum

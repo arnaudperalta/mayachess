@@ -16,6 +16,11 @@ $ go mod init github.com/arnaudperalta/mayachess
 $ go mod download
 ```
 
+### Run :
+```
+$ go run src/*.go
+```
+
 ### Build :
 ```
 $ go build -o mayachess src/*.go

@@ -60,4 +60,5 @@ func uci_command(game **chess.Game, cmd string) {
 		(*game).Move(move)
 		fmt.Printf("bestmove %s\n", move)
 	}
+	//fmt.Println((*game).Position().Board().Draw())
 }
